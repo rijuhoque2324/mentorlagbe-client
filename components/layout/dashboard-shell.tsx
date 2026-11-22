@@ -53,10 +53,14 @@ function NavLinks({
   pathname: string;
   onNavigate?: () => void;
 }) {
+  const activeHref = items
+    .filter((item) => isDashboardNavActive(pathname, item))
+    .sort((left, right) => right.href.length - left.href.length)[0]?.href;
+
   return (
     <ul className="space-y-1">
       {items.map((item) => {
-        const active = isDashboardNavActive(pathname, item);
+        const active = item.href === activeHref;
         const Icon = item.icon;
 
         return (

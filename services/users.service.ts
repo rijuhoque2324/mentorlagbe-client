@@ -17,11 +17,7 @@ export const userService = {
     const formData = new FormData();
     formData.append("image", file);
 
-    const payload = await apiPost<unknown>("/users/me/avatar", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const payload = await apiPost<unknown>("/users/me/avatar", formData);
 
     return normalizeUser(payload);
   },
