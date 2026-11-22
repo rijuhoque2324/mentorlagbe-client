@@ -1,7 +1,7 @@
 "use client";
 
 import { SearchX } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { ErrorState } from "@/components/shared/error-state";
 import { EmptyState } from "@/components/shared/empty-state";
@@ -75,20 +75,9 @@ export function TuitionListing({
     ],
   );
 
-  useEffect(() => {
-    setPage(1);
-  }, [
-    debouncedSearch,
-    filters.subject,
-    filters.classLevel,
-    filters.mode,
-    debouncedLocation,
-    debouncedMinFee,
-    debouncedMaxFee,
-  ]);
-
   function updateFilters(patch: Partial<TuitionFiltersState>) {
     setFilters((current) => ({ ...current, ...patch }));
+    setPage(1);
   }
 
   function resetFilters() {

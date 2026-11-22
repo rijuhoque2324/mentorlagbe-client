@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 import { ApplyDialog } from "@/components/tuitions/apply-dialog";
@@ -41,16 +41,14 @@ export function TuitionDetails({ id }: { id: string }) {
     () => tuitionService.getById(id),
     [id],
   );
-  const [bookmarked, setBookmarked] = useState(false);
+  const [bookmarkedOverride, setBookmarkedOverride] = useState<boolean | null>(
+    null,
+  );
   const [bookmarkBusy, setBookmarkBusy] = useState(false);
   const [applyOpen, setApplyOpen] = useState(false);
   const [applied, setApplied] = useState(false);
-
-  useEffect(() => {
-    if (tuition) {
-      setBookmarked(Boolean(tuition.isBookmarked));
-    }
-  }, [tuition]);
+  const bookmarked =
+    bookmarkedOverride ?? Boolean(tuition?.isBookmarked);
 
   if (loading) {
     return <PageLoading label="Loading tuition details…" />;
@@ -121,16 +119,16 @@ export function TuitionDetails({ id }: { id: string }) {
     try {
       if (bookmarked) {
         await bookmarkService.removeByTuition(id);
-        setBookmarked(false);
+        setBookmarkedOverride(false);
         toast.success("Bookmark removed");
       } else {
         await bookmarkService.add(id);
-        setBookmarked(true);
+        setBookmarkedOverride(true);
         toast.success("Tuition saved to your bookmarks");
       }
     } catch (caught) {
       if (caught instanceof ApiError && caught.status === 409) {
-        setBookmarked(true);
+        setBookmarkedOverride(true);
         toast.info("This tuition is already in your bookmarks.");
       } else {
         toast.error(

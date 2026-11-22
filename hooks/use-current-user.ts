@@ -49,7 +49,11 @@ export function invalidateCurrentUser() {
  */
 export function useCurrentUser() {
   const { data: session, isPending, refetch: refetchSession } = useSession();
-  const [profile, setProfile] = useState<User | null>(null);
+  const [profileState, setProfileState] = useState<{
+    userId: string;
+    value: User;
+  } | null>(null);
+  const [version, setVersion] = useState(0);
   const sessionUser = session?.user as unknown;
   const sessionRecord =
     sessionUser !== null && typeof sessionUser === "object"
@@ -59,7 +63,6 @@ export function useCurrentUser() {
 
   useEffect(() => {
     if (!userId) {
-      setProfile(null);
       return;
     }
 
@@ -68,7 +71,7 @@ export function useCurrentUser() {
     loadProfile()
       .then((user) => {
         if (active) {
-          setProfile(user);
+          setProfileState({ userId, value: user });
         }
       })
       .catch(() => {
@@ -78,14 +81,17 @@ export function useCurrentUser() {
     return () => {
       active = false;
     };
-  }, [userId]);
+  }, [userId, version]);
 
   const fallback = sessionRecord ? normalizeUser(sessionRecord) : null;
+  const profile =
+    profileState && profileState.userId === userId ? profileState.value : null;
   const user = profile ?? fallback;
 
   function refetch() {
     invalidateCurrentUser();
-    setProfile(null);
+    setProfileState(null);
+    setVersion((current) => current + 1);
     void refetchSession();
   }
 

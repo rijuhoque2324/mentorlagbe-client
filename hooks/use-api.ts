@@ -25,24 +25,27 @@ export function useApi<T>(
   const [error, setError] = useState<ApiError | null>(null);
   const [version, setVersion] = useState(0);
   const fetcherRef = useRef(fetcher);
-  fetcherRef.current = fetcher;
+
+  useEffect(() => {
+    fetcherRef.current = fetcher;
+  }, [fetcher]);
 
   useEffect(() => {
     let active = true;
 
-    setLoading(true);
-    setError(null);
+    async function load() {
+      setLoading(true);
+      setError(null);
 
-    fetcherRef
-      .current()
-      .then((result) => {
+      try {
+        const result = await fetcherRef.current();
+
         if (!active) {
           return;
         }
 
         setData(result);
-      })
-      .catch((caught: unknown) => {
+      } catch (caught) {
         if (!active) {
           return;
         }
@@ -57,12 +60,14 @@ export function useApi<T>(
                 { cause: caught },
               ),
         );
-      })
-      .finally(() => {
+      } finally {
         if (active) {
           setLoading(false);
         }
-      });
+      }
+    }
+
+    void load();
 
     return () => {
       active = false;

@@ -5,7 +5,7 @@ import { BookOpen, Eye, EyeOff, GraduationCap, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -78,7 +78,7 @@ export function SignUpForm({
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<SignUpValues>({
     resolver: zodResolver(signUpSchema),
@@ -91,7 +91,7 @@ export function SignUpForm({
     },
   });
 
-  const selectedRole = watch("role");
+  const selectedRole = useWatch({ control, name: "role" });
 
   useEffect(() => {
     if (!isPending && user) {
