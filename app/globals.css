@@ -1,17 +1,133 @@
 @import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: #ffffff;
-  --foreground: #111827;
-  --primary: #173B70;
-  --primary-foreground: #ffffff;
-  --secondary: #F1F5F9;
-  --muted: #64748b;
-  --border: #e2e8f0;
-  --accent: #EAF1FC;
   --radius: 0.75rem;
+
+  --background: #ffffff;
+  --foreground: #0f172a;
+
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+
+  --primary: #173b70;
+  --primary-foreground: #ffffff;
+
+  --secondary: #f1f5f9;
+  --secondary-foreground: #173b70;
+
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+
+  --accent: #eaf1fc;
+  --accent-foreground: #173b70;
+
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #93b4e8;
+
+  --sidebar: #f8fafc;
+  --sidebar-foreground: #334155;
+  --sidebar-primary: #173b70;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #eaf1fc;
+  --sidebar-accent-foreground: #173b70;
+  --sidebar-border: #e2e8f0;
+  --sidebar-ring: #93b4e8;
+}
+
+.dark {
+  --background: #0b1220;
+  --foreground: #e2e8f0;
+
+  --card: #111a2b;
+  --card-foreground: #e2e8f0;
+
+  --popover: #111a2b;
+  --popover-foreground: #e2e8f0;
+
+  --primary: #7aa7e8;
+  --primary-foreground: #0b1220;
+
+  --secondary: #1b2942;
+  --secondary-foreground: #dbe7fb;
+
+  --muted: #1b2942;
+  --muted-foreground: #94a3b8;
+
+  --accent: #1e3355;
+  --accent-foreground: #dbe7fb;
+
+  --destructive: #f87171;
+  --destructive-foreground: #0b1220;
+
+  --border: #22314b;
+  --input: #22314b;
+  --ring: #4f7cbd;
+
+  --sidebar: #0e1728;
+  --sidebar-foreground: #cbd5e1;
+  --sidebar-primary: #7aa7e8;
+  --sidebar-primary-foreground: #0b1220;
+  --sidebar-accent: #1e3355;
+  --sidebar-accent-foreground: #dbe7fb;
+  --sidebar-border: #22314b;
+  --sidebar-ring: #4f7cbd;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-heading: var(--font-sans);
 }
 
 * {
@@ -25,8 +141,9 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 button,
@@ -48,7 +165,7 @@ a {
 
 ::selection {
   background: #dbeafe;
-  color: #173B70;
+  color: #173b70;
 }
 
 .container-custom {
@@ -61,5 +178,19 @@ a {
 @media (max-width: 640px) {
   .container-custom {
     padding-inline: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
