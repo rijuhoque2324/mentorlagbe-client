@@ -30,6 +30,8 @@ export function dashboardPathForRole(
   }
 }
 
-export function isSafeInternalPath(path: string | null | undefined) {
+export function isSafeInternalPath(
+  path: string | null | undefined,
+): path is string {
   return Boolean(path && path.startsWith("/") && !path.startsWith("//"));
 }
