@@ -68,7 +68,7 @@ const studentBenefits = [
     icon: Sparkles,
     title: "Upgrade when it helps",
     description:
-      "Student Pro adds unlimited bookmarks and priority booking, subject to server confirmation.",
+      "Student Pro adds unlimited bookmarks. Checkout shows the final price and terms before any payment.",
   },
 ];
 
@@ -95,7 +95,7 @@ const tutorBenefits = [
     icon: Wallet,
     title: "Grow with Tutor Pro",
     description:
-      "Free tutors can publish up to two posts. Tutor Pro removes the limit and adds a verified badge.",
+      "Free tutors can publish up to two posts. Tutor Pro removes the limit; the server confirms every entitlement.",
   },
 ];
 
@@ -478,9 +478,9 @@ export default function HomePage() {
               summary={studentPlan.summary}
               features={[
                 { label: "Bookmarks", value: "Up to 5 free, unlimited on Pro" },
-                { label: "Priority booking", value: "Included with Pro" },
                 { label: "Applying", value: "Available on both plans" },
                 { label: "Browsing", value: "Available on both plans" },
+                { label: "Pro price", value: `$${studentPlan.price}` },
               ]}
             />
             <PlanPreviewCard
@@ -490,8 +490,8 @@ export default function HomePage() {
               features={[
                 { label: "Tuition posts", value: "2 free, unlimited on Pro" },
                 { label: "Applicant management", value: "Available on both plans" },
-                { label: "Verified badge", value: "Included with Pro" },
                 { label: "Editing", value: "Available on both plans" },
+                { label: "Pro price", value: `$${tutorPlan.price}` },
               ]}
             />
           </div>

@@ -23,7 +23,7 @@ export const studentPlan: PlanDetails = {
     { label: "Browse approved tuitions", free: "Yes", pro: "Yes" },
     { label: "Apply for tuition", free: "Yes", pro: "Yes" },
     { label: "Bookmarks", free: "Up to 5", pro: "Unlimited" },
-    { label: "Priority booking", free: "No", pro: "Yes" },
+    { label: "Pro price", free: "$0", pro: "$10" },
   ],
 };
 
@@ -31,12 +31,12 @@ export const tutorPlan: PlanDetails = {
   name: "Tutor Pro",
   price: 15,
   role: "tutor",
-  summary: "For tutors who publish more tuitions and want a verified badge.",
+  summary: "For tutors who publish more tuitions and want more room to grow.",
   features: [
     { label: "Tuition posts", free: "Maximum 2", pro: "Unlimited" },
     { label: "Edit own posts", free: "Yes", pro: "Yes" },
     { label: "Manage applicants", free: "Yes", pro: "Yes" },
-    { label: "Verified badge", free: "No", pro: "Yes" },
+    { label: "Pro price", free: "$0", pro: "$15" },
   ],
 };
 
