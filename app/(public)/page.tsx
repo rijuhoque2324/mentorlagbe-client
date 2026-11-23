@@ -16,9 +16,11 @@ import {
   Users,
   Wallet,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 import { FeaturedTuitions } from "@/components/home/featured-tuitions";
+import { PlatformStats } from "@/components/home/platform-stats";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { studentPlan, tutorPlan } from "@/constants/plans";
@@ -166,16 +168,22 @@ function PlanPreviewCard({
         ))}
       </ul>
 
-      <Link
-        href="/pricing"
-        className={cn(
-          buttonVariants({ variant: "outline" }),
-          "mt-auto h-10 w-full pt-0",
-        )}
-      >
-        Compare plans
-        <ArrowRight aria-hidden="true" />
-      </Link>
+      <div className="mt-auto grid gap-2 pt-6">
+        <Link
+          href="/pricing"
+          className={cn(buttonVariants({ variant: "default" }), "h-10 w-full")}
+        >
+          <CreditCard aria-hidden="true" />
+          Subscribe with Stripe
+        </Link>
+        <Link
+          href="/pricing"
+          className={cn(buttonVariants({ variant: "outline" }), "h-10 w-full")}
+        >
+          Compare plans
+          <ArrowRight aria-hidden="true" />
+        </Link>
+      </div>
     </div>
   );
 }
@@ -195,9 +203,9 @@ export default function HomePage() {
             </Badge>
 
             <h1 className="mt-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-              Find the right tutor.
+              Find Your Ideal Tutor
               <span className="mt-2 block text-primary">
-                Build your future.
+                or Mentorship Batch Today
               </span>
             </h1>
 
@@ -265,6 +273,16 @@ export default function HomePage() {
               aria-hidden="true"
             />
             <div className="relative rounded-3xl border border-border bg-slate-50 p-5 shadow-sm sm:p-8">
+              <div className="relative mb-5 aspect-[16/9] overflow-hidden rounded-2xl">
+                <Image
+                  src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80"
+                  alt="Students learning together with a mentor"
+                  fill
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 560px"
+                  className="object-cover"
+                />
+              </div>
               <div className="rounded-2xl bg-background p-6 shadow-sm">
                 <div className="flex items-center gap-3">
                   <div className="flex size-12 items-center justify-center rounded-xl bg-blue-50 text-primary">
@@ -355,6 +373,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <PlatformStats />
 
       <section className="bg-slate-50 py-16 sm:py-20">
         <div className="container-custom">
@@ -466,8 +486,8 @@ export default function HomePage() {
               Start free. Upgrade when it helps.
             </h2>
             <p className="mt-3 text-sm leading-7 text-muted-foreground sm:text-base">
-              The billing cadence for Pro plans is not assumed here. Final terms
-              are confirmed at checkout.
+              Pro is a one-time Stripe payment: Student Pro for $10 and Tutor
+              Pro for $15. Your plan upgrades as soon as Stripe confirms it.
             </p>
           </div>
 
