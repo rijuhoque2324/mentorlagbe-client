@@ -1,10 +1,11 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, Loader2, Save } from "lucide-react";
+import { ArrowLeft, ImagePlus, Loader2, Save, Trash2 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -23,6 +24,7 @@ import { classLevelOptions, subjectOptions } from "@/constants/tuitions";
 import { useApi } from "@/hooks/use-api";
 import { ApiError } from "@/lib/api";
 import { tuitionService } from "@/services/tuitions.service";
+import { uploadService } from "@/services/uploads.service";
 import type { Tuition, TuitionInput } from "@/types";
 import { cn } from "cn";
 
@@ -141,7 +143,11 @@ interface TuitionFormProps {
 
 export function TuitionForm({ mode, tuitionId }: TuitionFormProps) {
   const router = useRouter();
+  const bannerInputRef = useRef<HTMLInputElement>(null);
   const [serverError, setServerError] = useState<ApiError | null>(null);
+  const [bannerImage, setBannerImage] = useState("");
+  const [bannerBusy, setBannerBusy] = useState(false);
+  const [bannerError, setBannerError] = useState<string | null>(null);
 
   const {
     data: tuition,
@@ -166,8 +172,48 @@ export function TuitionForm({ mode, tuitionId }: TuitionFormProps) {
   useEffect(() => {
     if (mode === "edit" && tuition) {
       reset(valuesFromTuition(tuition));
+      setBannerImage(tuition.bannerImage ?? "");
     }
   }, [mode, tuition, reset]);
+
+  async function handleBannerChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+
+    if (!file) {
+      return;
+    }
+
+    setBannerError(null);
+
+    if (!file.type.startsWith("image/")) {
+      setBannerError("Choose an image file such as a PNG or JPEG.");
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      setBannerError("Choose an image smaller than 2 MB.");
+      return;
+    }
+
+    setBannerBusy(true);
+
+    try {
+      const uploaded = await uploadService.image(file);
+      setBannerImage(uploaded.url);
+      toast.success("Banner uploaded", {
+        description: "Save the tuition to keep this image.",
+      });
+    } catch (caught) {
+      setBannerError(
+        caught instanceof ApiError
+          ? caught.message
+          : "We could not upload this image. Please try again.",
+      );
+    } finally {
+      setBannerBusy(false);
+    }
+  }
 
   async function onSubmit(values: TuitionValues) {
     setServerError(null);
@@ -184,6 +230,7 @@ export function TuitionForm({ mode, tuitionId }: TuitionFormProps) {
       requirements: values.requirements.trim() || undefined,
       availability: values.availability.trim() || undefined,
       isActive: values.isActive,
+      bannerImage: bannerImage || undefined,
     };
 
     try {
@@ -471,6 +518,92 @@ export function TuitionForm({ mode, tuitionId }: TuitionFormProps) {
                 {...register("availability")}
               />
             </FormField>
+          </div>
+        </Panel>
+
+        <Panel
+          title="Banner image"
+          description="Optional cover image shown on tuition cards and the details page."
+        >
+          <div className="space-y-3">
+            <div className="relative flex aspect-[16/7] items-center justify-center overflow-hidden rounded-lg border border-dashed border-border bg-muted/40">
+              {bannerImage ? (
+                <Image
+                  src={bannerImage}
+                  alt="Tuition banner preview"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 720px"
+                  className="object-cover"
+                />
+              ) : (
+                <div className="px-4 py-8 text-center text-sm text-muted-foreground">
+                  <ImagePlus
+                    className="mx-auto size-7 text-muted-foreground"
+                    aria-hidden="true"
+                  />
+                  <p className="mt-2">No banner uploaded yet</p>
+                </div>
+              )}
+              {bannerBusy ? (
+                <div className="absolute inset-0 flex items-center justify-center bg-background/70">
+                  <Loader2
+                    className="size-6 animate-spin text-primary"
+                    aria-label="Uploading banner"
+                  />
+                </div>
+              ) : null}
+            </div>
+
+            <input
+              ref={bannerInputRef}
+              id="tuition-banner"
+              type="file"
+              accept="image/png,image/jpeg,image/webp,image/gif"
+              className="sr-only"
+              onChange={handleBannerChange}
+              disabled={bannerBusy || isSubmitting}
+            />
+
+            <div className="flex flex-wrap items-center gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => bannerInputRef.current?.click()}
+                disabled={bannerBusy || isSubmitting}
+              >
+                {bannerBusy ? (
+                  <Loader2 className="animate-spin" aria-hidden="true" />
+                ) : (
+                  <ImagePlus aria-hidden="true" />
+                )}
+                {bannerBusy
+                  ? "Uploading…"
+                  : bannerImage
+                    ? "Replace banner"
+                    : "Upload banner"}
+              </Button>
+              {bannerImage ? (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => setBannerImage("")}
+                  disabled={bannerBusy || isSubmitting}
+                >
+                  <Trash2 aria-hidden="true" />
+                  Remove
+                </Button>
+              ) : null}
+            </div>
+
+            <p className="text-xs leading-5 text-muted-foreground">
+              PNG, JPEG, WebP or GIF, up to 2 MB. The server uploads the file to
+              ImgBB and stores the hosted URL.
+            </p>
+            {bannerError ? (
+              <p className="text-xs font-medium text-destructive" role="alert">
+                {bannerError}
+              </p>
+            ) : null}
           </div>
         </Panel>
 

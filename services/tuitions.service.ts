@@ -9,7 +9,7 @@ import {
   toPage,
 } from "@/lib/api";
 import { normalizeTuition } from "@/lib/normalize";
-import type { Page, Tuition, TuitionInput } from "@/types";
+import type { ApplyInput, Page, Tuition, TuitionInput } from "@/types";
 
 export interface TuitionQuery {
   search?: string;
@@ -82,9 +82,26 @@ export const tuitionService = {
     return normalizeTuition(payload);
   },
 
-  async apply(id: string, message?: string): Promise<unknown> {
-    return apiPost(`/tuitions/${id}/apply`, {
-      ...(message?.trim() ? { message: message.trim() } : {}),
+  async uploadBanner(id: string, file: File): Promise<Tuition> {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const payload = await apiPost<unknown>(`/tuitions/${id}/banner`, formData, {
+      timeout: 30_000,
     });
+
+    return normalizeTuition(payload);
+  },
+
+  async apply(id: string, input: ApplyInput = {}): Promise<unknown> {
+    const body: Record<string, string> = {};
+
+    if (input.studentNote?.trim()) body.studentNote = input.studentNote.trim();
+    if (input.preferredSchedule?.trim()) {
+      body.preferredSchedule = input.preferredSchedule.trim();
+    }
+    if (input.phone?.trim()) body.phone = input.phone.trim();
+
+    return apiPost(`/tuitions/${id}/apply`, body);
   },
 };
