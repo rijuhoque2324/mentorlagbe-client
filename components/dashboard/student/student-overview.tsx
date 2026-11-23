@@ -116,7 +116,7 @@ export function StudentOverview() {
           value={total}
           hint={`${pluralize(total, "application")} submitted`}
           icon={FileText}
-          href="/dashboard/student/applications"
+          href="/dashboard/student/my-applications"
         />
         <StatCard
           label="Pending"
@@ -124,7 +124,7 @@ export function StudentOverview() {
           hint="Awaiting a tutor response"
           tone="amber"
           icon={Send}
-          href="/dashboard/student/applications"
+          href="/dashboard/student/my-applications"
         />
         <StatCard
           label="Accepted"
@@ -132,7 +132,7 @@ export function StudentOverview() {
           hint={`${cancelled} cancelled · ${rejected} rejected`}
           tone="green"
           icon={CheckCircle2}
-          href="/dashboard/student/applications"
+          href="/dashboard/student/my-applications"
         />
         <StatCard
           label="Saved tuitions"
@@ -152,7 +152,7 @@ export function StudentOverview() {
             <Button
               variant="ghost"
               size="sm"
-              render={<Link href="/dashboard/student/applications" />}
+              render={<Link href="/dashboard/student/my-applications" />}
             >
               View all
               <ArrowRight aria-hidden="true" />

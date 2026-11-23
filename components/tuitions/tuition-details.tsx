@@ -361,7 +361,7 @@ export function TuitionDetails({ id }: { id: string }) {
                   className="mt-5"
                 >
                   Track the status from your{" "}
-                  <Link href="/dashboard/student/applications">
+                  <Link href="/dashboard/student/my-applications">
                     student dashboard
                   </Link>
                   .

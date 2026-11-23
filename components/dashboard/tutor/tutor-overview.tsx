@@ -103,7 +103,7 @@ export function TutorOverview() {
         title={firstName ? `Welcome back, ${firstName}` : "Welcome back"}
         description="Manage your tuition posts and respond to the students who applied."
         actions={
-          <Button render={<Link href="/dashboard/tutor/tuitions/new" />}>
+          <Button render={<Link href="/dashboard/tutor/post-tuition" />}>
             <Plus aria-hidden="true" />
             New tuition
           </Button>
@@ -124,7 +124,7 @@ export function TutorOverview() {
           value={totalTuitions}
           hint={`${pluralize(totalTuitions, "post")} published`}
           icon={ClipboardList}
-          href="/dashboard/tutor/tuitions"
+          href="/dashboard/tutor/my-tuitions"
         />
         <StatCard
           label="Pending review"
@@ -132,7 +132,7 @@ export function TutorOverview() {
           hint="Waiting for admin moderation"
           tone="amber"
           icon={Eye}
-          href="/dashboard/tutor/tuitions"
+          href="/dashboard/tutor/my-tuitions"
         />
         <StatCard
           label="Active posts"
@@ -140,7 +140,7 @@ export function TutorOverview() {
           hint="Visible to students when approved"
           tone="green"
           icon={CheckCircle2}
-          href="/dashboard/tutor/tuitions"
+          href="/dashboard/tutor/my-tuitions"
         />
         <StatCard
           label="Applications"
@@ -208,7 +208,7 @@ export function TutorOverview() {
             <Button
               variant="ghost"
               size="sm"
-              render={<Link href="/dashboard/tutor/tuitions" />}
+              render={<Link href="/dashboard/tutor/my-tuitions" />}
             >
               Manage
               <ArrowRight aria-hidden="true" />
@@ -222,7 +222,7 @@ export function TutorOverview() {
               description="Create your first tuition post. An admin reviews it before it appears in public search."
               className="border-0 bg-transparent py-8"
               action={
-                <Button render={<Link href="/dashboard/tutor/tuitions/new" />}>
+                <Button render={<Link href="/dashboard/tutor/post-tuition" />}>
                   <Plus aria-hidden="true" />
                   Create tuition
                 </Button>
@@ -235,7 +235,7 @@ export function TutorOverview() {
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <Link
-                        href={`/dashboard/tutor/tuitions/${tuition.id}/edit`}
+                        href={`/dashboard/tutor/my-tuitions/${tuition.id}/edit`}
                         className="line-clamp-1 font-medium text-foreground hover:text-primary hover:underline"
                       >
                         {tuition.title}

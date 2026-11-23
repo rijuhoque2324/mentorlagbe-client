@@ -257,7 +257,7 @@ export function TuitionForm({ mode, tuitionId }: TuitionFormProps) {
         );
       }
 
-      router.push("/dashboard/tutor/tuitions");
+      router.push("/dashboard/tutor/my-tuitions");
       router.refresh();
     } catch (caught) {
       setServerError(
@@ -283,7 +283,7 @@ export function TuitionForm({ mode, tuitionId }: TuitionFormProps) {
           title="Edit tuition"
           actions={
             <Link
-              href="/dashboard/tutor/tuitions"
+              href="/dashboard/tutor/my-tuitions"
               className={buttonVariants({ variant: "outline" })}
             >
               <ArrowLeft aria-hidden="true" />
@@ -294,7 +294,7 @@ export function TuitionForm({ mode, tuitionId }: TuitionFormProps) {
         <DashboardError
           error={error}
           onRetry={refetch}
-          notFoundHref="/dashboard/tutor/tuitions"
+          notFoundHref="/dashboard/tutor/my-tuitions"
           notFoundLabel="Back to my tuitions"
         />
       </div>
@@ -307,7 +307,7 @@ export function TuitionForm({ mode, tuitionId }: TuitionFormProps) {
         <PageHeader eyebrow="Tutor dashboard" title="Edit tuition" />
         <DashboardError
           error={new ApiError("This tuition is not available.", { status: 404 })}
-          notFoundHref="/dashboard/tutor/tuitions"
+          notFoundHref="/dashboard/tutor/my-tuitions"
           notFoundLabel="Back to my tuitions"
         />
       </div>
@@ -328,7 +328,7 @@ export function TuitionForm({ mode, tuitionId }: TuitionFormProps) {
         }
         actions={
           <Link
-            href="/dashboard/tutor/tuitions"
+            href="/dashboard/tutor/my-tuitions"
             className={buttonVariants({ variant: "outline" })}
           >
             <ArrowLeft aria-hidden="true" />
@@ -669,7 +669,7 @@ export function TuitionForm({ mode, tuitionId }: TuitionFormProps) {
 
         <div className="flex flex-wrap items-center justify-end gap-2">
           <Link
-            href="/dashboard/tutor/tuitions"
+            href="/dashboard/tutor/my-tuitions"
             className={cn(buttonVariants({ variant: "outline" }))}
           >
             Cancel

@@ -30,7 +30,7 @@ export const dashboardNavigation: Record<UserRole, DashboardNavItem[]> = {
     },
     {
       label: "My Applications",
-      href: "/dashboard/student/applications",
+      href: "/dashboard/student/my-applications",
       icon: FileText,
       exact: true,
     },
@@ -56,12 +56,12 @@ export const dashboardNavigation: Record<UserRole, DashboardNavItem[]> = {
     },
     {
       label: "My Tuitions",
-      href: "/dashboard/tutor/tuitions",
+      href: "/dashboard/tutor/my-tuitions",
       icon: ClipboardList,
     },
     {
-      label: "New Tuition",
-      href: "/dashboard/tutor/tuitions/new",
+      label: "Post a Tuition",
+      href: "/dashboard/tutor/post-tuition",
       icon: PlusCircle,
       exact: true,
     },

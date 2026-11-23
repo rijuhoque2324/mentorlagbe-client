@@ -16,6 +16,14 @@ const nextConfig: NextConfig = {
       { source: "/api/v1/:path*", destination: `${API_PROXY_TARGET}/api/v1/:path*` },
     ];
   },
+  async redirects() {
+    return [
+      { source: "/dashboard/student/applications", destination: "/dashboard/student/my-applications", permanent: true },
+      { source: "/dashboard/tutor/tuitions/new", destination: "/dashboard/tutor/post-tuition", permanent: true },
+      { source: "/dashboard/tutor/tuitions/:path*", destination: "/dashboard/tutor/my-tuitions/:path*", permanent: true },
+      { source: "/dashboard/tutor/tuitions", destination: "/dashboard/tutor/my-tuitions", permanent: true },
+    ];
+  },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "i.ibb.co" },

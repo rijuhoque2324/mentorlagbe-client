@@ -139,7 +139,7 @@ export function TutorTuitions() {
         title="My tuitions"
         description="Control visibility, edit details and remove posts you no longer need."
         actions={
-          <Button render={<Link href="/dashboard/tutor/tuitions/new" />}>
+          <Button render={<Link href="/dashboard/tutor/post-tuition" />}>
             <Plus aria-hidden="true" />
             New tuition
           </Button>
@@ -224,7 +224,7 @@ export function TutorTuitions() {
                 Clear filters
               </Button>
             ) : (
-              <Button render={<Link href="/dashboard/tutor/tuitions/new" />}>
+              <Button render={<Link href="/dashboard/tutor/post-tuition" />}>
                 <Plus aria-hidden="true" />
                 Create tuition
               </Button>
@@ -252,7 +252,7 @@ export function TutorTuitions() {
                   <TableRow key={tuition.id}>
                     <TableCell className="max-w-64 py-3 pl-4 whitespace-normal">
                       <Link
-                        href={`/dashboard/tutor/tuitions/${tuition.id}/edit`}
+                        href={`/dashboard/tutor/my-tuitions/${tuition.id}/edit`}
                         className="font-medium text-foreground hover:text-primary hover:underline"
                       >
                         {tuition.title}
@@ -296,7 +296,7 @@ export function TutorTuitions() {
                               : "Show"}
                         </Button>
                         <Link
-                          href={`/dashboard/tutor/tuitions/${tuition.id}/edit`}
+                          href={`/dashboard/tutor/my-tuitions/${tuition.id}/edit`}
                           className={buttonVariants({
                             variant: "outline",
                             size: "xs",
