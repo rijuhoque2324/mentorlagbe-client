@@ -54,6 +54,7 @@ export interface Tuition {
   tutor?: TutorSummary;
   isBookmarked?: boolean;
   applicationCount?: number;
+  bannerImage?: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -66,6 +67,12 @@ export interface Application {
   student?: User;
   status: ApplicationStatus;
   message?: string;
+  preferredSchedule?: string;
+  studentPhone?: string;
+  tutorName?: string;
+  tutorEmail?: string;
+  monthlyFee?: number;
+  isPriority?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -134,6 +141,13 @@ export interface TuitionInput {
   requirements?: string;
   availability?: string;
   isActive?: boolean;
+  bannerImage?: string;
+}
+
+export interface ApplyInput {
+  studentNote?: string;
+  preferredSchedule?: string;
+  phone?: string;
 }
 
 export interface ProfileInput {

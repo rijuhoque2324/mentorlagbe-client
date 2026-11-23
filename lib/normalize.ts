@@ -271,6 +271,8 @@ export function normalizeTuition(raw: unknown): Tuition {
     requirements:
       text(first(record.requirements, record.studentRequirements)) || undefined,
     availability: text(first(record.availability, record.schedule)) || undefined,
+    bannerImage:
+      text(first(record.bannerImage, record.banner, record.imageUrl)) || undefined,
     status,
     isActive: flag(
       first(record.isActive, record.active, record.published),
@@ -300,20 +302,29 @@ export function normalizeApplication(raw: unknown): Application {
   const rawStudent = asRecord(
     first(record.student, record.applicant, record.user),
   );
+  const tuition = Object.keys(rawTuition).length
+    ? normalizeTuition(rawTuition)
+    : undefined;
 
   return {
     id: identifier(record),
     tuitionId: text(first(record.tuitionId, identifier(rawTuition))),
-    tuition: Object.keys(rawTuition).length
-      ? normalizeTuition(rawTuition)
-      : undefined,
+    tuition,
     studentId: text(first(record.studentId, identifier(rawStudent))),
     student: Object.keys(rawStudent).length
       ? normalizeUser(rawStudent)
       : undefined,
     status: normalizeApplicationStatus(record.status),
-    message: text(first(record.message, record.note)) || undefined,
-    createdAt: text(record.createdAt) || undefined,
+    message: text(first(record.message, record.note, record.studentNote)) || undefined,
+    preferredSchedule: text(record.preferredSchedule) || undefined,
+    studentPhone:
+      text(first(record.studentPhone, record.phone)) || undefined,
+    tutorName: text(first(record.tutorName, tuition?.tutor?.name)) || undefined,
+    tutorEmail:
+      text(first(record.tutorEmail, tuition?.tutor?.email)) || undefined,
+    monthlyFee: decimal(first(record.monthlyFee, tuition?.monthlyFee)),
+    isPriority: flag(record.isPriority, false),
+    createdAt: text(first(record.createdAt, record.appliedAt)) || undefined,
     updatedAt: text(record.updatedAt) || undefined,
   };
 }
