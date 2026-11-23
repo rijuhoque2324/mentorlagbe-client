@@ -36,7 +36,7 @@ export function TutorOverview() {
       await Promise.all([
         tuitionService.mine({ limit: 5 }),
         tuitionService.mine({ status: "pending", limit: 1 }),
-        tuitionService.mine({ isActive: true, limit: 1 }),
+        tuitionService.mine({ status: "approved", isActive: true, limit: 1 }),
         applicationService.forTutor({ status: "pending", limit: 1 }),
         applicationService.forTutor({ limit: 5 }),
       ]);
@@ -120,35 +120,35 @@ export function TutorOverview() {
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
-          label="My tuitions"
+          label="Total Tuitions Posted"
           value={totalTuitions}
-          hint={`${pluralize(totalTuitions, "post")} published`}
+          hint={`${data?.pendingTuitions ?? 0} waiting for admin review`}
           icon={ClipboardList}
           href="/dashboard/tutor/my-tuitions"
         />
         <StatCard
-          label="Pending review"
-          value={data?.pendingTuitions ?? 0}
-          hint="Waiting for admin moderation"
-          tone="amber"
-          icon={Eye}
-          href="/dashboard/tutor/my-tuitions"
-        />
-        <StatCard
-          label="Active posts"
+          label="Active / Approved"
           value={data?.activeTuitions ?? 0}
-          hint="Visible to students when approved"
+          hint="Approved and visible to students"
           tone="green"
           icon={CheckCircle2}
           href="/dashboard/tutor/my-tuitions"
         />
         <StatCard
-          label="Applications"
+          label="Total Applicants"
           value={totalApplications}
           hint={`${pendingApplications} waiting for your response`}
           tone="blue"
           icon={Users}
           href="/dashboard/tutor/applicants"
+        />
+        <StatCard
+          label="Current Plan"
+          value={user?.plan === "pro" ? "Pro" : "Free"}
+          hint={user?.plan === "pro" ? "Unlimited tuition posts" : `Up to ${FREE_TUITION_POST_LIMIT} posts · upgrade for unlimited`}
+          tone="amber"
+          icon={Eye}
+          href={user?.plan === "pro" ? "/dashboard/tutor/my-tuitions" : "/pricing"}
         />
       </div>
 

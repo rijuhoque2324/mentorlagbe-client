@@ -112,22 +112,14 @@ export function StudentOverview() {
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
-          label="Applications"
+          label="Total Applied Tuitions"
           value={total}
           hint={`${pluralize(total, "application")} submitted`}
           icon={FileText}
           href="/dashboard/student/my-applications"
         />
         <StatCard
-          label="Pending"
-          value={pending}
-          hint="Awaiting a tutor response"
-          tone="amber"
-          icon={Send}
-          href="/dashboard/student/my-applications"
-        />
-        <StatCard
-          label="Accepted"
+          label="Accepted Applications"
           value={accepted}
           hint={`${cancelled} cancelled · ${rejected} rejected`}
           tone="green"
@@ -135,12 +127,20 @@ export function StudentOverview() {
           href="/dashboard/student/my-applications"
         />
         <StatCard
-          label="Saved tuitions"
-          value={bookmarkTotal}
-          hint="Review before applying"
+          label="Pending Applications"
+          value={pending}
+          hint="Awaiting a tutor response"
+          tone="amber"
+          icon={Send}
+          href="/dashboard/student/my-applications"
+        />
+        <StatCard
+          label="Current Plan"
+          value={user?.plan === "pro" ? "Pro" : "Free"}
+          hint={`${bookmarkTotal} saved ${bookmarkTotal === 1 ? "tuition" : "tuitions"}`}
           tone="blue"
           icon={Bookmark}
-          href="/dashboard/student/bookmarks"
+          href={user?.plan === "pro" ? "/dashboard/student/bookmarks" : "/pricing"}
         />
       </div>
 

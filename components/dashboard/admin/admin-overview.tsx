@@ -104,32 +104,32 @@ export function AdminOverview() {
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
-          label="Total users"
+          label="Total Users"
           value={stats.users.total}
-          hint={`${stats.users.students} students · ${stats.users.tutors} tutors`}
+          hint={`${stats.users.students} students · ${stats.users.admins ?? 0} admins`}
           icon={Users}
           href="/dashboard/admin/users"
         />
         <StatCard
-          label="Pending moderation"
-          value={stats.tuitions.pending}
+          label="Total Tutors"
+          value={stats.users.tutors}
+          hint="Registered tutor accounts"
+          tone="green"
+          icon={CheckCircle2}
+          href="/dashboard/admin/users"
+        />
+        <StatCard
+          label="Pending vs Approved"
+          value={`${stats.tuitions.pending} / ${stats.tuitions.approved}`}
           hint={`${stats.tuitions.total} tuition posts in total`}
           tone="amber"
           icon={ShieldCheck}
           href="/dashboard/admin/tuitions"
         />
         <StatCard
-          label="Paid transactions"
-          value={stats.transactions.paid}
-          hint={`${stats.transactions.pending} pending · ${stats.transactions.failed} failed`}
-          tone="green"
-          icon={CheckCircle2}
-          href="/dashboard/admin/transactions"
-        />
-        <StatCard
-          label="Recorded revenue"
+          label="Total Stripe Revenue"
           value={formatCurrency(stats.transactions.revenue, currency)}
-          hint="Based on paid transaction records"
+          hint={`${stats.transactions.paid} paid subscription payments`}
           tone="blue"
           icon={Wallet}
           href="/dashboard/admin/transactions"
