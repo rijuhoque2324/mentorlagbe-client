@@ -5,6 +5,8 @@ import {
   ExternalLink,
   LogOut,
   Menu,
+  PanelLeftClose,
+  PanelLeftOpen,
   UserRound,
 } from "lucide-react";
 import Link from "next/link";
@@ -144,6 +146,7 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const items = role ? dashboardNavigation[role] : [];
 
@@ -175,7 +178,12 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-svh bg-slate-50/70">
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r border-border bg-background lg:flex">
+      <aside
+        className={`fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r border-border bg-background transition-transform duration-300 lg:flex ${
+          collapsed ? "lg:-translate-x-full" : "lg:translate-x-0"
+        }`}
+        aria-hidden={collapsed ? true : undefined}
+      >
         <div className="flex h-16 items-center border-b border-border px-4">
           <Brand />
         </div>
@@ -219,7 +227,7 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
         </div>
       </aside>
 
-      <div className="lg:pl-64">
+      <div className={`transition-[padding] duration-300 ${collapsed ? "lg:pl-0" : "lg:pl-64"}`}>
         <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-3 border-b border-border bg-background/95 px-4 backdrop-blur lg:px-8">
           <div className="flex items-center gap-2">
             <Button
@@ -231,6 +239,17 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
               onClick={() => setMobileOpen(true)}
             >
               <Menu />
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="hidden lg:inline-flex"
+              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+              aria-pressed={collapsed}
+              onClick={() => setCollapsed((value) => !value)}
+            >
+              {collapsed ? <PanelLeftOpen /> : <PanelLeftClose />}
             </Button>
             <span className="hidden text-sm font-medium text-muted-foreground sm:inline">
               {role ? `${roleLabels[role]} dashboard` : "Dashboard"}
@@ -272,7 +291,7 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
                 </DropdownMenuItem>
                 <DropdownMenuItem render={<Link href="/dashboard/profile" />}>
                   <UserRound aria-hidden="true" />
-                  Profile
+                  Update Profile
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
@@ -287,7 +306,7 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
           </div>
         </header>
 
-        <main className="mx-auto w-full max-w-7xl px-4 py-6 lg:px-8 lg:py-8">
+        <main className="w-full px-4 py-6 lg:px-8 lg:py-8">
           {children}
         </main>
       </div>
