@@ -210,14 +210,50 @@ export function StudentApplications() {
                         {[
                           application.tuition?.subject,
                           application.tuition?.classLevel,
-                          application.tuition
-                            ? formatCurrency(application.tuition.monthlyFee)
+                          application.monthlyFee ||
+                          application.tuition?.monthlyFee
+                            ? formatCurrency(
+                                application.monthlyFee ||
+                                  application.tuition?.monthlyFee ||
+                                  0,
+                              )
                             : null,
                           application.tuition?.location,
                         ]
                           .filter(Boolean)
                           .join(" · ")}
                       </p>
+
+                      <p className="text-sm text-muted-foreground">
+                        Tutor:{" "}
+                        <span className="font-medium text-foreground">
+                          {application.tutorName ??
+                            application.tuition?.tutor?.name ??
+                            "Tutor"}
+                        </span>
+                        {application.tutorEmail ? (
+                          <>
+                            {" · "}
+                            <a
+                              href={`mailto:${application.tutorEmail}`}
+                              className="hover:text-primary hover:underline"
+                            >
+                              {application.tutorEmail}
+                            </a>
+                          </>
+                        ) : (
+                          <span className="text-xs">
+                            {" "}
+                            · Email is shared after the tutor accepts
+                          </span>
+                        )}
+                      </p>
+
+                      {application.preferredSchedule ? (
+                        <p className="text-xs text-muted-foreground">
+                          Preferred schedule: {application.preferredSchedule}
+                        </p>
+                      ) : null}
 
                       {application.message ? (
                         <p className="max-w-3xl rounded-lg bg-muted/60 px-3 py-2 text-sm leading-6 text-muted-foreground">

@@ -1,8 +1,10 @@
 "use client";
 
 import {
+  CalendarClock,
   CheckCircle2,
   Mail,
+  Phone,
   SearchX,
   UserRound,
   Users,
@@ -19,6 +21,7 @@ import { PageHeader } from "@/components/shared/page-header";
 import { Pagination } from "@/components/shared/pagination";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -229,6 +232,14 @@ export function TutorApplicants() {
                           {application.student?.name ?? "Student"}
                         </p>
                         <StatusBadge status={application.status} />
+                        {application.isPriority ? (
+                          <Badge
+                            variant="outline"
+                            className="border-amber-200 bg-amber-50 text-amber-700"
+                          >
+                            Priority
+                          </Badge>
+                        ) : null}
                       </div>
                       <p className="mt-1 text-sm text-muted-foreground">
                         Applied to{" "}
@@ -242,23 +253,40 @@ export function TutorApplicants() {
                       <p className="mt-1 text-xs text-muted-foreground">
                         {formatDate(application.createdAt)}
                       </p>
-                      {application.status === "accepted" &&
-                      application.student?.email ? (
-                        <p className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
-                          <Mail className="size-3.5" aria-hidden="true" />
+                      <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                        {application.student?.email ? (
                           <a
                             href={`mailto:${application.student.email}`}
-                            className="hover:text-primary hover:underline"
+                            className="flex items-center gap-1.5 hover:text-primary hover:underline"
                           >
+                            <Mail className="size-3.5" aria-hidden="true" />
                             {application.student.email}
                           </a>
-                        </p>
-                      ) : (
-                        <p className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
-                          <UserRound className="size-3.5" aria-hidden="true" />
-                          Contact details appear after you accept the application.
-                        </p>
-                      )}
+                        ) : null}
+                        {application.studentPhone ? (
+                          <a
+                            href={`tel:${application.studentPhone}`}
+                            className="flex items-center gap-1.5 hover:text-primary hover:underline"
+                          >
+                            <Phone className="size-3.5" aria-hidden="true" />
+                            {application.studentPhone}
+                          </a>
+                        ) : (
+                          <span className="flex items-center gap-1.5">
+                            <UserRound className="size-3.5" aria-hidden="true" />
+                            Phone appears after you accept the application.
+                          </span>
+                        )}
+                        {application.preferredSchedule ? (
+                          <span className="flex items-center gap-1.5">
+                            <CalendarClock
+                              className="size-3.5"
+                              aria-hidden="true"
+                            />
+                            {application.preferredSchedule}
+                          </span>
+                        ) : null}
+                      </div>
                     </div>
                   </div>
 
