@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import { clearAccessToken } from "@/lib/access-token";
 import { useSession } from "@/lib/auth-client";
 import { normalizeUser } from "@/lib/normalize";
 import { getRoleFromUser } from "@/lib/roles";
@@ -15,6 +16,7 @@ interface CachedProfile {
 
 let cachedProfile: CachedProfile | null = null;
 let inFlight: Promise<User> | null = null;
+let lastTokenUser: string | null = null;
 
 async function loadProfile(force = false): Promise<User> {
   if (!force && cachedProfile && cachedProfile.expiresAt > Date.now()) {
@@ -41,6 +43,7 @@ async function loadProfile(force = false): Promise<User> {
 
 export function invalidateCurrentUser() {
   cachedProfile = null;
+  clearAccessToken();
 }
 
 /**
@@ -60,6 +63,14 @@ export function useCurrentUser() {
       ? (sessionUser as Record<string, unknown>)
       : null;
   const userId = sessionRecord ? String(sessionRecord.id ?? "") : "";
+
+  // A new (or no) signed-in user invalidates any cached JWT access token.
+  useEffect(() => {
+    if (lastTokenUser !== userId) {
+      lastTokenUser = userId;
+      clearAccessToken();
+    }
+  }, [userId]);
 
   useEffect(() => {
     if (!userId) {

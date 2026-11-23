@@ -1,8 +1,10 @@
-import axios, { type AxiosRequestConfig } from "axios";
+import axios, { type AxiosRequestConfig, type InternalAxiosRequestConfig } from "axios";
 
+import { clearAccessToken, getAccessToken } from "@/lib/access-token";
 import type { Page } from "@/types";
 
-const FALLBACK_BASE_URL = "http://localhost:5000/api/v1";
+// Same-origin path, proxied to the Express API by next.config.ts rewrites.
+const FALLBACK_BASE_URL = "/api/v1";
 
 export const API_BASE_URL = (
   process.env.NEXT_PUBLIC_API_URL?.trim() || FALLBACK_BASE_URL
@@ -135,9 +137,40 @@ function toApiError(error: unknown): ApiError {
   });
 }
 
+type RetriableConfig = InternalAxiosRequestConfig & { _jwtRetried?: boolean };
+
+// Attach the JWT access token to every request when the user is signed in.
+api.interceptors.request.use(async (config) => {
+  const token = await getAccessToken(API_BASE_URL);
+  if (token) {
+    config.headers.set("Authorization", `Bearer ${token}`);
+  }
+  return config;
+});
+
 api.interceptors.response.use(
   (response) => response,
-  (error: unknown) => Promise.reject(toApiError(error)),
+  async (error: unknown) => {
+    // Missing/expired token: fetch a fresh one once and replay the request.
+    if (axios.isAxiosError(error) && error.response?.status === 401 && error.config) {
+      const config = error.config as RetriableConfig;
+      if (!config._jwtRetried && !String(config.url ?? "").endsWith("/auth/token")) {
+        config._jwtRetried = true;
+        clearAccessToken();
+        const token = await getAccessToken(API_BASE_URL, true);
+        if (token) {
+          config.headers.set("Authorization", `Bearer ${token}`);
+          try {
+            return await api.request(config);
+          } catch (retryError) {
+            return Promise.reject(toApiError(retryError));
+          }
+        }
+      }
+    }
+
+    return Promise.reject(toApiError(error));
+  },
 );
 
 /**
