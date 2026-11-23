@@ -109,6 +109,11 @@ export default function Navbar() {
                     <AvatarFallback>{initials(user.name)}</AvatarFallback>
                   </Avatar>
                   <span className="max-w-28 truncate">{user.name}</span>
+                  {role ? (
+                    <span className="hidden rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary lg:inline">
+                      {roleLabels[role]}
+                    </span>
+                  ) : null}
                   <ChevronDown
                     className="size-4 text-muted-foreground"
                     aria-hidden="true"
@@ -137,7 +142,7 @@ export default function Navbar() {
                   </DropdownMenuItem>
                   <DropdownMenuItem render={<Link href="/dashboard/profile" />}>
                     <UserRound aria-hidden="true" />
-                    Profile
+                    Update Profile
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
@@ -146,7 +151,7 @@ export default function Navbar() {
                     disabled={signingOut}
                   >
                     <LogOut aria-hidden="true" />
-                    {signingOut ? "Signing out…" : "Sign out"}
+                    {signingOut ? "Signing out…" : "Sign Out"}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -159,7 +164,7 @@ export default function Navbar() {
                     "h-9 px-4",
                   )}
                 >
-                  Sign in
+                  Sign In
                 </Link>
                 <Link
                   href="/sign-up"
@@ -168,7 +173,7 @@ export default function Navbar() {
                     "h-9 px-4",
                   )}
                 >
-                  Get started
+                  Sign Up
                 </Link>
               </>
             )}
@@ -237,7 +242,7 @@ export default function Navbar() {
                     )}
                   >
                     <UserRound aria-hidden="true" />
-                    Profile
+                    Update Profile
                   </Link>
                   <button
                     type="button"
@@ -249,7 +254,7 @@ export default function Navbar() {
                     )}
                   >
                     <LogOut aria-hidden="true" />
-                    {signingOut ? "Signing out…" : "Sign out"}
+                    {signingOut ? "Signing out…" : "Sign Out"}
                   </button>
                 </>
               ) : (
@@ -262,7 +267,7 @@ export default function Navbar() {
                       "h-10 w-full",
                     )}
                   >
-                    Sign in
+                    Sign In
                   </Link>
                   <Link
                     href="/sign-up"
@@ -272,7 +277,7 @@ export default function Navbar() {
                       "h-10 w-full",
                     )}
                   >
-                    Get started
+                    Sign Up
                   </Link>
                 </>
               )}

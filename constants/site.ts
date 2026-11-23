@@ -8,7 +8,7 @@ export const siteConfig = {
 
 export const publicNavigation = [
   { label: "Home", href: "/" },
-  { label: "Find Tuitions", href: "/tuitions" },
-  { label: "Pricing", href: "/pricing" },
-  { label: "About", href: "/about" },
+  { label: "Browse Tuitions", href: "/tuitions" },
+  { label: "Pricing / Pro Plans", href: "/pricing" },
+  { label: "How It Works", href: "/about" },
 ] as const;
