@@ -155,40 +155,46 @@ export function AdminTransactions() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="pl-4">Reference</TableHead>
-                  <TableHead>User</TableHead>
-                  <TableHead>Plan</TableHead>
+                  <TableHead className="pl-4">User Name</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Role</TableHead>
+                  <TableHead>Plan Name</TableHead>
                   <TableHead>Amount</TableHead>
+                  <TableHead>Transaction ID</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead className="pr-4">Created</TableHead>
+                  <TableHead className="pr-4">Payment Date</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {items.map((transaction) => (
                   <TableRow key={transaction.id}>
-                    <TableCell className="max-w-48 truncate py-3 pl-4 font-mono text-xs text-muted-foreground">
-                      {transaction.reference || transaction.id || "—"}
+                    <TableCell className="py-3 pl-4 font-medium text-foreground">
+                      {transaction.userName ?? transaction.user?.name ?? "Unknown user"}
                     </TableCell>
-                    <TableCell>
-                      <p className="font-medium text-foreground">
-                        {transaction.user?.name ?? "Unknown user"}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {transaction.user?.email ?? transaction.userId}
-                      </p>
+                    <TableCell className="text-muted-foreground">
+                      {transaction.userEmail ?? transaction.user?.email ?? transaction.userId}
                     </TableCell>
-                    <TableCell>{transaction.plan}</TableCell>
+                    <TableCell className="capitalize">
+                      {transaction.userRole ?? transaction.user?.role ?? "—"}
+                    </TableCell>
+                    <TableCell>{transaction.planName ?? transaction.plan}</TableCell>
                     <TableCell className="font-medium">
                       {formatCurrency(
                         transaction.amount,
                         transaction.currency,
                       )}
                     </TableCell>
+                    <TableCell
+                      className="max-w-44 truncate font-mono text-xs text-muted-foreground"
+                      title={transaction.transactionId ?? transaction.reference}
+                    >
+                      {transaction.transactionId || transaction.reference || "—"}
+                    </TableCell>
                     <TableCell>
                       <StatusBadge status={transaction.status} />
                     </TableCell>
                     <TableCell className="pr-4 text-muted-foreground">
-                      {formatDateTime(transaction.createdAt)}
+                      {formatDateTime(transaction.paidAt ?? transaction.createdAt)}
                     </TableCell>
                   </TableRow>
                 ))}

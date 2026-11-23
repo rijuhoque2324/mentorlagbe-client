@@ -93,6 +93,12 @@ export interface Transaction {
   currency: string;
   status: TransactionStatus;
   reference?: string;
+  userName?: string;
+  userEmail?: string;
+  userRole?: string;
+  planName?: string;
+  transactionId?: string;
+  paidAt?: string;
   createdAt?: string;
 }
 
@@ -155,6 +161,8 @@ export interface ProfileInput {
   phone?: string;
   bio?: string;
   location?: string;
+  /** Profile photo URL (https). Empty string clears the photo. */
+  image?: string;
 }
 
 export interface CheckoutResponse {

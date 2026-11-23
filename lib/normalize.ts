@@ -363,6 +363,13 @@ export function normalizeTransaction(raw: unknown): Transaction {
         record.sessionId,
       ),
     ) || undefined,
+    userName: text(first(record.userName, rawUser.name)) || undefined,
+    userEmail: text(first(record.userEmail, rawUser.email)) || undefined,
+    userRole: text(first(record.userRole, record.role, rawUser.role)) || undefined,
+    planName: text(first(record.planName, record.plan)) || undefined,
+    transactionId:
+      text(first(record.transactionId, record.stripePaymentIntentId, record.stripeSessionId)) || undefined,
+    paidAt: text(record.paidAt) || undefined,
     createdAt: text(record.createdAt) || undefined,
   };
 }
