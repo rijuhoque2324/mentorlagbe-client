@@ -50,6 +50,13 @@ const profileSchema = z.object({
     .string()
     .trim()
     .max(120, "Keep your location under 120 characters."),
+  image: z
+    .string()
+    .trim()
+    .refine(
+      (value) => value === "" || /^https:\/\/\S+$/i.test(value),
+      "Enter an image URL starting with https://",
+    ),
 });
 
 type ProfileValues = z.infer<typeof profileSchema>;
@@ -59,6 +66,7 @@ const emptyValues: ProfileValues = {
   phone: "",
   bio: "",
   location: "",
+  image: "",
 };
 
 function valuesFromUser(user: User): ProfileValues {
@@ -67,6 +75,7 @@ function valuesFromUser(user: User): ProfileValues {
     phone: user.phone ?? "",
     bio: user.bio ?? "",
     location: user.location ?? "",
+    image: user.image ?? "",
   };
 }
 
@@ -116,19 +125,21 @@ export function ProfileForm() {
         phone: values.phone.trim() || undefined,
         bio: values.bio.trim() || undefined,
         location: values.location.trim() || undefined,
+        image: values.image.trim(),
       });
       reset(valuesFromUser(updated));
       setData(updated);
       refetchSessionUser();
       toast.success("Profile saved");
     } catch (caught) {
-      setServerError(
+      const apiError =
         caught instanceof ApiError
           ? caught
           : new ApiError("We could not save your profile. Please try again.", {
               cause: caught,
-            }),
-      );
+            });
+      setServerError(apiError);
+      toast.error(apiError.message);
     }
   }
 
@@ -271,6 +282,23 @@ export function ProfileForm() {
                   disabled={isSubmitting}
                   aria-invalid={errors.location ? true : undefined}
                   {...register("location")}
+                />
+              </FormField>
+
+              <FormField
+                label="Profile photo URL"
+                htmlFor="profile-image"
+                error={errors.image?.message}
+                hint="Optional. Paste an https:// image link, or upload a photo with ImgBB on the right."
+              >
+                <Input
+                  id="profile-image"
+                  type="url"
+                  inputMode="url"
+                  placeholder="https://i.ibb.co/your-photo.jpg"
+                  disabled={isSubmitting}
+                  aria-invalid={errors.image ? true : undefined}
+                  {...register("image")}
                 />
               </FormField>
 
