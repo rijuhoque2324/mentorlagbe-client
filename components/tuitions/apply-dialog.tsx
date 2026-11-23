@@ -18,16 +18,30 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useCurrentUser } from "@/hooks/use-current-user";
 import { ApiError } from "@/lib/api";
 import { tuitionService } from "@/services/tuitions.service";
 import type { Tuition } from "@/types";
 
 const applicationSchema = z.object({
-  message: z
+  phone: z
     .string()
-    .max(1000, "Keep your message under 1000 characters.")
-    .optional(),
+    .trim()
+    .max(20, "Keep your phone number under 20 characters.")
+    .refine(
+      (value) => value === "" || /^\+?[0-9\s-]{6,20}$/.test(value),
+      "Use digits, spaces, + or - only.",
+    ),
+  preferredSchedule: z
+    .string()
+    .trim()
+    .max(200, "Keep your preferred schedule under 200 characters."),
+  studentNote: z
+    .string()
+    .trim()
+    .max(1000, "Keep your note under 1000 characters."),
 });
 
 type ApplicationValues = z.infer<typeof applicationSchema>;
@@ -45,6 +59,7 @@ export function ApplyDialog({
   onOpenChange,
   onApplied,
 }: ApplyDialogProps) {
+  const { user } = useCurrentUser();
   const [serverError, setServerError] = useState<string | null>(null);
   const [duplicate, setDuplicate] = useState(false);
 
@@ -55,7 +70,11 @@ export function ApplyDialog({
     formState: { errors, isSubmitting },
   } = useForm<ApplicationValues>({
     resolver: zodResolver(applicationSchema),
-    defaultValues: { message: "" },
+    defaultValues: {
+      phone: user?.phone ?? "",
+      preferredSchedule: "",
+      studentNote: "",
+    },
   });
 
   async function onSubmit(values: ApplicationValues) {
@@ -63,7 +82,11 @@ export function ApplyDialog({
     setDuplicate(false);
 
     try {
-      await tuitionService.apply(tuition.id, values.message);
+      await tuitionService.apply(tuition.id, {
+        phone: values.phone,
+        preferredSchedule: values.preferredSchedule,
+        studentNote: values.studentNote,
+      });
       toast.success("Application submitted", {
         description: "The tutor can now review your application.",
       });
@@ -115,18 +138,53 @@ export function ApplyDialog({
             </InlineAlert>
           ) : null}
 
+          <div className="grid gap-4 sm:grid-cols-2">
+            <FormField
+              label="Phone number"
+              htmlFor="application-phone"
+              error={errors.phone?.message}
+              hint="So the tutor can reach you after accepting."
+            >
+              <Input
+                id="application-phone"
+                type="tel"
+                autoComplete="tel"
+                placeholder="+880 1XXX XXXXXX"
+                disabled={isSubmitting}
+                aria-invalid={errors.phone ? true : undefined}
+                {...register("phone")}
+              />
+            </FormField>
+
+            <FormField
+              label="Preferred schedule"
+              htmlFor="application-schedule"
+              error={errors.preferredSchedule?.message}
+              hint="For example: “Weekdays after 6pm”."
+            >
+              <Input
+                id="application-schedule"
+                placeholder="Weekdays after 6pm"
+                disabled={isSubmitting}
+                aria-invalid={errors.preferredSchedule ? true : undefined}
+                {...register("preferredSchedule")}
+              />
+            </FormField>
+          </div>
+
           <FormField
-            label="Message to the tutor"
-            htmlFor="application-message"
-            error={errors.message?.message}
-            hint="Optional. Mention your availability or relevant experience."
+            label="Learning note"
+            htmlFor="application-note"
+            error={errors.studentNote?.message}
+            hint="Optional. Mention your goals, level or relevant experience."
           >
             <Textarea
-              id="application-message"
+              id="application-note"
+              rows={4}
               placeholder="Tell the tutor why you are a good fit for this tuition."
               disabled={isSubmitting}
-              aria-invalid={errors.message ? true : undefined}
-              {...register("message")}
+              aria-invalid={errors.studentNote ? true : undefined}
+              {...register("studentNote")}
             />
           </FormField>
 

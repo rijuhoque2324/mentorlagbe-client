@@ -12,6 +12,7 @@ import {
   Wallet,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -164,7 +165,20 @@ export function TuitionDetails({ id }: { id: string }) {
 
         <div className="mt-5 grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
           <div className="space-y-6">
-            <article className="rounded-xl border border-border bg-card p-6 shadow-xs sm:p-8">
+            <article className="overflow-hidden rounded-xl border border-border bg-card p-6 shadow-xs sm:p-8">
+              {tuition.bannerImage ? (
+                <div className="relative -mx-6 -mt-6 mb-6 aspect-[16/7] overflow-hidden sm:-mx-8 sm:-mt-8">
+                  <Image
+                    src={tuition.bannerImage}
+                    alt={`${tuition.title} banner`}
+                    fill
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 760px"
+                    className="object-cover"
+                  />
+                </div>
+              ) : null}
+
               <div className="flex flex-wrap items-center gap-2">
                 {tuition.subject ? (
                   <Badge variant="secondary">{tuition.subject}</Badge>
