@@ -16,13 +16,13 @@ import { cn } from "cn";
 export function FeaturedTuitions() {
   const { data, loading, error, refetch } = useApi(async () => {
     try {
-      return await tuitionService.featured(3);
+      return await tuitionService.featured(6);
     } catch (caught) {
       if (
         caught instanceof ApiError &&
         (caught.status === 404 || caught.status === 405)
       ) {
-        const page = await tuitionService.list({ limit: 3 });
+        const page = await tuitionService.list({ limit: 6 });
         return page.items;
       }
 
@@ -42,8 +42,8 @@ export function FeaturedTuitions() {
               Approved opportunities to explore
             </h2>
             <p className="mt-3 text-sm leading-7 text-muted-foreground sm:text-base">
-              Featured posts are supplied by the API. Only approved and active
-              tuitions should be displayed here.
+              The six latest admin-approved, active tuition batches. Open any
+              card to see the full schedule, fee and tutor profile.
             </p>
           </div>
 
@@ -57,7 +57,7 @@ export function FeaturedTuitions() {
         </div>
 
         <div className="mt-8">
-          {loading ? <CardGridSkeleton count={3} /> : null}
+          {loading ? <CardGridSkeleton count={6} /> : null}
 
           {!loading && error ? (
             <ErrorState
