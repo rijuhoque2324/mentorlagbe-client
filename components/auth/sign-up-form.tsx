@@ -113,6 +113,7 @@ export function SignUpForm({
 
     if (error) {
       setServerError(getAuthErrorMessage(error));
+      toast.error(getAuthErrorMessage(error));
       return;
     }
 

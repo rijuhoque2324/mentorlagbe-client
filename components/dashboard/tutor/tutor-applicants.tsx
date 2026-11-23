@@ -274,7 +274,7 @@ export function TutorApplicants() {
                         ) : (
                           <span className="flex items-center gap-1.5">
                             <UserRound className="size-3.5" aria-hidden="true" />
-                            Phone appears after you accept the application.
+                            No phone number provided.
                           </span>
                         )}
                         {application.preferredSchedule ? (

@@ -34,7 +34,7 @@ export default function GlobalError({
           Try again
         </Button>
         <Link href="/" className={buttonVariants({ variant: "outline" })}>
-          Go to homepage
+          Back to Home
         </Link>
       </div>
     </div>

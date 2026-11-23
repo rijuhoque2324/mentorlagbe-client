@@ -109,7 +109,7 @@ export function TuitionCard({
           href={detailsHref}
           className={cn(buttonVariants({ variant: "outline" }), "h-9 w-full")}
         >
-          View details
+          View Details
           <ArrowRight aria-hidden="true" />
         </Link>
       </div>

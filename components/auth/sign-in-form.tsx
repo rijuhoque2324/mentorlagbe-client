@@ -68,6 +68,7 @@ export function SignInForm({ nextPath }: { nextPath?: string }) {
 
     if (error) {
       setServerError(getAuthErrorMessage(error));
+      toast.error(getAuthErrorMessage(error));
       return;
     }
 

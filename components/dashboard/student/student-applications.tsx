@@ -241,12 +241,7 @@ export function StudentApplications() {
                               {application.tutorEmail}
                             </a>
                           </>
-                        ) : (
-                          <span className="text-xs">
-                            {" "}
-                            · Email is shared after the tutor accepts
-                          </span>
-                        )}
+                        ) : null}
                       </p>
 
                       {application.preferredSchedule ? (
