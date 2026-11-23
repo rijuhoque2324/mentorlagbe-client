@@ -3,12 +3,22 @@ import axios, { type AxiosRequestConfig, type InternalAxiosRequestConfig } from 
 import { clearAccessToken, getAccessToken } from "@/lib/access-token";
 import type { Page } from "@/types";
 
-// Same-origin path, proxied to the Express API by next.config.ts rewrites.
-const FALLBACK_BASE_URL = "/api/v1";
+const FALLBACK_BASE_URL = "http://localhost:5000/api/v1";
 
+/**
+ * Data requests go directly to the Express API (the live server in
+ * production) and authenticate with the JWT bearer token.
+ */
 export const API_BASE_URL = (
   process.env.NEXT_PUBLIC_API_URL?.trim() || FALLBACK_BASE_URL
 ).replace(/\/+$/, "");
+
+/**
+ * The session-to-JWT exchange needs the Better Auth session cookie, which is
+ * first-party on this origin, so it goes through the same-origin proxy
+ * (next.config.ts rewrites) to the same server.
+ */
+const TOKEN_BASE_URL = "/api/v1";
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
@@ -141,7 +151,7 @@ type RetriableConfig = InternalAxiosRequestConfig & { _jwtRetried?: boolean };
 
 // Attach the JWT access token to every request when the user is signed in.
 api.interceptors.request.use(async (config) => {
-  const token = await getAccessToken(API_BASE_URL);
+  const token = await getAccessToken(TOKEN_BASE_URL);
   if (token) {
     config.headers.set("Authorization", `Bearer ${token}`);
   }
@@ -157,7 +167,7 @@ api.interceptors.response.use(
       if (!config._jwtRetried && !String(config.url ?? "").endsWith("/auth/token")) {
         config._jwtRetried = true;
         clearAccessToken();
-        const token = await getAccessToken(API_BASE_URL, true);
+        const token = await getAccessToken(TOKEN_BASE_URL, true);
         if (token) {
           config.headers.set("Authorization", `Bearer ${token}`);
           try {
