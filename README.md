@@ -46,7 +46,8 @@ expiry date and any CVC.
   every new account starts on the `free` plan. Zod form validation and toasts.
 - After sign-in the client exchanges the session for a **JWT** and sends it as
   `Authorization: Bearer <token>` on every protected API request.
-- The API and auth endpoints are proxied through this origin (Next.js
+- Data requests go straight to the live Express API with the JWT. Sign-in and the
+  JWT exchange are proxied through this origin (Next.js
   rewrites), so the session cookie is first-party: users stay signed in when
   they reload any private route.
 
@@ -96,9 +97,9 @@ The API must be running at `API_PROXY_TARGET` (default `http://localhost:5000`).
 | Variable | Example | Notes |
 | --- | --- | --- |
 | `NEXT_PUBLIC_APP_URL` | `http://localhost:3000` | Public origin of this app |
-| `NEXT_PUBLIC_API_URL` | `/api/v1` | Same-origin API path (proxied) |
+| `NEXT_PUBLIC_API_URL` | `http://localhost:5000/api/v1` | Express API base URL (live: `https://mentorlagbe-server-gules.vercel.app/api/v1`) |
 | `NEXT_PUBLIC_BETTER_AUTH_URL` | `http://localhost:3000` | Better Auth is served from this origin |
-| `API_PROXY_TARGET` | `http://localhost:5000` | Server-only: Express API the proxy forwards to |
+| `API_PROXY_TARGET` | `http://localhost:5000` | Server-only: API that `/api/auth` and the JWT exchange are proxied to |
 | `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | `pk_test_...` | Publishable key only |
 
 Secrets (MongoDB, Better Auth, JWT, Stripe secret, ImgBB) live only in the
